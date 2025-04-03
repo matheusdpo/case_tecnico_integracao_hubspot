@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Display</title>
+</head>
+<body>
+<div th:if="${code}">
+    <p>Codigo: <span th:text="${code}" id="codeValue"></span></p>
+    <button onclick="copyToClipboard()">Copiar</button>
+</div>
+<div th:unless="${code}">
+    <p>Nenhum codigo foi fornecido na URL. Tente novamente ou contate o administrador de sistemas</p>
+</div>
+
+<script>
+    function copyToClipboard() {
+        const code = document.getElementById('codeValue').innerText;
+        navigator.clipboard.writeText(code)
+            .then(() => alert('Codigo copiado: ' + code))
+            .catch(err => alert('Erro ao copiar: ' + err));
+    }
+</script>
+</body>
+</html>
