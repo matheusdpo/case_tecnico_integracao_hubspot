@@ -69,9 +69,9 @@ public class HubSpotApiController {
     }
 
     @GetMapping("/token-access")
-    public ResponseEntity<?> getTokenAccess(@RequestParam String clientId,
-                                            @RequestParam String clientSecret,
-                                            @RequestParam String code) {
+    public ResponseEntity<?> getTokenAccess(@RequestParam(required = false) String clientId,
+                                            @RequestParam(required = false) String clientSecret,
+                                            @RequestParam(required = false) String code) {
 
         if (Objects.isNull(clientId) || clientId.isEmpty()) {
             return ResponseEntity
