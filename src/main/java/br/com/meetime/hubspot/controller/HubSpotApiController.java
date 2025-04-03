@@ -1,8 +1,9 @@
 package br.com.meetime.hubspot.controller;
 
-import br.com.meetime.hubspot.dto.response.AccessTokenResponse;
-import br.com.meetime.hubspot.dto.response.AuthorizationUrlResponse;
-import br.com.meetime.hubspot.dto.response.InternalServerErrorResponse;
+import br.com.meetime.hubspot.dto.request.AccountHubSpotDTO;
+import br.com.meetime.hubspot.dto.response.AccessTokenDTO;
+import br.com.meetime.hubspot.dto.response.AuthorizationUrlDTO;
+import br.com.meetime.hubspot.dto.response.InternalServerErrorDTO;
 import br.com.meetime.hubspot.enums.StatusHubSpotApiEnum;
 import br.com.meetime.hubspot.exceptions.SerializationUtilsException;
 import br.com.meetime.hubspot.utils.SerializationUtils;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -35,6 +33,9 @@ public class HubSpotApiController {
     @Value("${hubspot.token.url}")
     private String tokenUrl;
 
+    @Value("${hubspot.contacts.url}")
+    private String contactsUrl;
+
     @Value("${hubspot.token.grantType}")
     private String grantType;
 
@@ -42,28 +43,37 @@ public class HubSpotApiController {
     private SerializationUtils serializationUtils;
 
     @GetMapping("/authorize-url")
-    public ResponseEntity<?> getAuthorizationUrl(@RequestParam(required = false) String clientId) {
+    public ResponseEntity<?> getAuthorizationUrl(
+            @RequestParam(required = false) String accountId,
+            @RequestParam(required = false) String clientId) {
         try {
+//            if (Objects.isNull(accountId) || accountId.isEmpty()) {
+//                return ResponseEntity
+//                        .status(HttpStatus.BAD_REQUEST)
+//                        .body(new InternalServerErrorResponse(
+//                                StatusHubSpotApiEnum.ACCOUNTID_OBRIGATORIO.getStatusCode(),
+//                                StatusHubSpotApiEnum.ACCOUNTID_OBRIGATORIO.getStatus()));
+//            }
             if (Objects.isNull(clientId) || clientId.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .body(new InternalServerErrorResponse(
+                        .body(new InternalServerErrorDTO(
                                 StatusHubSpotApiEnum.CLIENTID_OBRIGATORIO.getStatusCode(),
                                 StatusHubSpotApiEnum.CLIENTID_OBRIGATORIO.getStatus()));
             }
 
-            String url = String.format("%s?client_id=%s&redirect_uri=%s&scope=%s",
-                    authUrl, clientId, redirectUri, scope);
+//            String url = String.format("%s/%s/authorize/?client_id=%s&redirect_uri=%s&scope=%s", authUrl, accountId, clientId, redirectUri, scope);
+            String url = String.format("%s/?client_id=%s&redirect_uri=%s&scope=%s", authUrl, clientId, redirectUri, scope);
 
-            AuthorizationUrlResponse authorizationUrlResponse = new AuthorizationUrlResponse(url);
+            AuthorizationUrlDTO authorizationUrlDTO = new AuthorizationUrlDTO(url);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(authorizationUrlResponse);
+                    .body(authorizationUrlDTO);
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new InternalServerErrorResponse(e.getMessage()));
+                    .body(new InternalServerErrorDTO(e.getMessage()));
         }
 
     }
@@ -76,7 +86,7 @@ public class HubSpotApiController {
         if (Objects.isNull(clientId) || clientId.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new InternalServerErrorResponse(
+                    .body(new InternalServerErrorDTO(
                             StatusHubSpotApiEnum.CLIENTID_OBRIGATORIO.getStatusCode(),
                             StatusHubSpotApiEnum.CLIENTID_OBRIGATORIO.getStatus()));
         }
@@ -84,7 +94,7 @@ public class HubSpotApiController {
         if (Objects.isNull(clientSecret) || clientSecret.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new InternalServerErrorResponse(
+                    .body(new InternalServerErrorDTO(
                             StatusHubSpotApiEnum.CLIENTSECRET_OBRIGATORIO.getStatusCode(),
                             StatusHubSpotApiEnum.CLIENTSECRET_OBRIGATORIO.getStatus()));
         }
@@ -92,7 +102,7 @@ public class HubSpotApiController {
         if (Objects.isNull(code) || code.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new InternalServerErrorResponse(
+                    .body(new InternalServerErrorDTO(
                             StatusHubSpotApiEnum.CODE_OBRIGATORIO.getStatusCode(),
                             StatusHubSpotApiEnum.CODE_OBRIGATORIO.getStatus()));
         }
@@ -107,12 +117,12 @@ public class HubSpotApiController {
                     .field("code", code)
                     .asString();
 
-            AccessTokenResponse accessTokenResponse = serializationUtils.jsonToObject(response.getBody(), AccessTokenResponse.class);
+            AccessTokenDTO accessTokenDTO = serializationUtils.jsonToObject(response.getBody(), AccessTokenDTO.class);
 
-            if (Objects.isNull(accessTokenResponse.getAccessToken()) || accessTokenResponse.getAccessToken().isEmpty()) {
+            if (Objects.isNull(accessTokenDTO.getAccessToken()) || accessTokenDTO.getAccessToken().isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .body(new InternalServerErrorResponse(
+                        .body(new InternalServerErrorDTO(
                                 StatusHubSpotApiEnum.ACCESS_TOKEN_NULL.getStatusCode(),
                                 StatusHubSpotApiEnum.ACCESS_TOKEN_NULL.getStatus())
                         );
@@ -120,18 +130,66 @@ public class HubSpotApiController {
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(accessTokenResponse);
+                    .body(accessTokenDTO);
         } catch (SerializationUtilsException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new InternalServerErrorResponse(
+                    .body(new InternalServerErrorDTO(
                             StatusHubSpotApiEnum.ERRO_SERIALIZACAO.getStatusCode(),
                             StatusHubSpotApiEnum.ERRO_SERIALIZACAO.getStatus())
                     );
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new InternalServerErrorResponse(e.getMessage()));
+                    .body(new InternalServerErrorDTO(e.getMessage()));
+        }
+    }
+
+
+    //todo rate limit
+    @PostMapping("/create-account")
+    public ResponseEntity<?> createAccount(@RequestBody(required = false) AccountHubSpotDTO accountHubSpotDTO,
+                                           @RequestHeader(name = "authorization", required = false) String token) {
+        try {
+            if (Objects.isNull(token) || token.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new InternalServerErrorDTO(
+                                StatusHubSpotApiEnum.BEARER_INFO_NULL.getStatusCode(),
+                                StatusHubSpotApiEnum.BEARER_INFO_NULL.getStatus())
+                        );
+            }
+
+            if (accountHubSpotDTO.hasEmptyOrNullFields()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new InternalServerErrorDTO(
+                                StatusHubSpotApiEnum.ACCOUNT_INFO_NULL.getStatusCode(),
+                                StatusHubSpotApiEnum.ACCOUNT_INFO_NULL.getStatus())
+                        );
+            }
+
+            String jsonBody = serializationUtils.objectToJson(accountHubSpotDTO);
+
+            HttpResponse<String> response = Unirest.post(contactsUrl)
+                    .header("Authorization", token)
+                    .header("Content-Type", "application/json")
+                    .body(jsonBody)
+                    .asString();
+
+            if (response.getStatus() != HttpStatus.CREATED.value()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new InternalServerErrorDTO(response.getBody()));
+            }
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(accountHubSpotDTO);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new InternalServerErrorDTO(e.getMessage()));
         }
     }
 }
