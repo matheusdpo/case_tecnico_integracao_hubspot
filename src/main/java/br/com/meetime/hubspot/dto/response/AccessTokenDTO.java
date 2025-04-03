@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccessTokenResponse {
+public class AccessTokenDTO {
 
     @JsonProperty("access_token")
     private String accessToken;
 
-    public AccessTokenResponse() {
+    public AccessTokenDTO() {
     }
 
-    public AccessTokenResponse(String accessToken) {
+    public AccessTokenDTO(String accessToken) {
         this.accessToken = accessToken;
     }
 

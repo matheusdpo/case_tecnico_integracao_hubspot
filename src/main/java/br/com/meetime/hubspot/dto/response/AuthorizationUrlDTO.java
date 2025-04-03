@@ -1,12 +1,12 @@
 package br.com.meetime.hubspot.dto.response;
 
-public class AuthorizationUrlResponse {
+public class AuthorizationUrlDTO {
     private String url;
 
-    public AuthorizationUrlResponse() {
+    public AuthorizationUrlDTO() {
     }
 
-    public AuthorizationUrlResponse(String url) {
+    public AuthorizationUrlDTO(String url) {
         this.url = url;
     }
 

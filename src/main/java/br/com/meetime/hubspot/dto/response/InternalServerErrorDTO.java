@@ -1,21 +1,21 @@
 package br.com.meetime.hubspot.dto.response;
 
-public class InternalServerErrorResponse {
+public class InternalServerErrorDTO {
 
     private int statusCode = 0;
     private boolean error = true;
     private String message;
 
-    public InternalServerErrorResponse() {
+    public InternalServerErrorDTO() {
 
     }
 
-    public InternalServerErrorResponse(int statusCode, String message) {
+    public InternalServerErrorDTO(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }
 
-    public InternalServerErrorResponse(String message) {
+    public InternalServerErrorDTO(String message) {
         this.message = message;
     }
 
