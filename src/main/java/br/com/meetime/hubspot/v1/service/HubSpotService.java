@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 public class HubSpotService {
 
     //url
-    @Value("${hubspot.url.base}")
-    private String baseUrl;
+    @Value("${hubspot.url.base.api}")
+    private String baseUrlApi;
+
+    @Value("${hubspot.url.base.app}")
+    private String baseUrlApp;
 
     @Value("${hubspot.url.redirect}")
     private String redirectUrl;
@@ -41,11 +44,11 @@ public class HubSpotService {
     private String appId;
 
     public String getUrl(String clientId) {
-        return String.format("%s%s/?client_id=%s&redirect_uri=%s&scope=%s", baseUrl, authRoute, clientId, redirectUrl, scope);
+        return String.format("%s%s/?client_id=%s&redirect_uri=%s&scope=%s", baseUrlApp, authRoute, clientId, redirectUrl, scope); //app.hubspot
     }
 
     public HttpResponse<String> postTokenAccess(String clientId, String clientSecret, String code) {
-        String url = String.format("%s%s", baseUrl, tokenRoute);
+        String url = String.format("%s%s", baseUrlApi, tokenRoute);
         return Unirest.post(url)
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .field("grant_type", grantType)
@@ -58,7 +61,7 @@ public class HubSpotService {
     }
 
     public HttpResponse<String> postCreateAccount(String token, String jsonBody) {
-        String url = String.format("%s%s", baseUrl, tokenRoute);
+        String url = String.format("%s%s", baseUrlApi, contactsRoute);
         return Unirest.post(url)
                 .header("Authorization", token)
                 .header("Content-Type", "application/json")
@@ -67,13 +70,13 @@ public class HubSpotService {
     }
 
     public HttpResponse<String> getSubscriptions(String hapikey) {
-        String url = String.format("%s%s/%s%s?hapikey=%s", baseUrl, webhookRoute, appId, subscriptionsRoute,hapikey);
+        String url = String.format("%s%s/%s%s?hapikey=%s", baseUrlApi, webhookRoute, appId, subscriptionsRoute,hapikey);
         return Unirest.get(url)
                 .asString();
     }
 
     public HttpResponse<String> patchUpdateSubscriptions(String idSubscription, String hapikey, String jsonBody) {
-        String url = String.format("%s%s/%s/subscriptions/%s?hapikey=%s", baseUrl, webhookRoute, appId, idSubscription, hapikey);
+        String url = String.format("%s%s/%s/subscriptions/%s?hapikey=%s", baseUrlApi, webhookRoute, appId, idSubscription, hapikey);
         return Unirest.patch(url)
                 .header("content-type", "application/json")
                 .body(jsonBody)
