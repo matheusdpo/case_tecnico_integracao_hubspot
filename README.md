@@ -108,13 +108,12 @@ mvn spring-boot:run
 
 ---
 
-# Documentação da API - Swagger UI
+## Documentação da API - Swagger UI
 
 Esta aplicação possui integração com o **Swagger UI**, permitindo a visualização e testes interativos dos endpoints da API.
 
----
 
-## URL da documentação:
+### URL da documentação:
 
  [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
