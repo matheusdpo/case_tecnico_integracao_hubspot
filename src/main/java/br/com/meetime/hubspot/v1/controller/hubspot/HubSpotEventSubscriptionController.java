@@ -11,11 +11,8 @@ import br.com.meetime.hubspot.v1.enums.StatusHubSpotApiEnum;
 import br.com.meetime.hubspot.v1.exceptions.SerializationUtilsException;
 import br.com.meetime.hubspot.v1.service.HubSpotService;
 import br.com.meetime.hubspot.v1.utils.DateAndHourUtils;
+import br.com.meetime.hubspot.v1.utils.LogUtils;
 import br.com.meetime.hubspot.v1.utils.SerializationUtils;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kong.unirest.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +34,19 @@ public class HubSpotEventSubscriptionController implements HubSpotEventSubscript
     @Autowired
     private SerializationUtils serializationUtils;
 
+    @Autowired
+    private LogUtils logger;
+
     @PostMapping("/process-webhook")
     @Override
     public ResponseEntity<?> getTokenAccess(@RequestParam(required = false) String apikey,
                                             @RequestBody(required = false) EventSubscriptionProcessDTO eventSubscriptionProcessDTO) {
 
         try {
+            logger.info("Iniciando o processamento do webhook.");
+
             if (Objects.isNull(apikey) || apikey.isEmpty()) {
+                logger.error("API Key não fornecida.");
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
                         .body(new InternalServerErrorDTO(
@@ -54,6 +57,7 @@ public class HubSpotEventSubscriptionController implements HubSpotEventSubscript
             HttpResponse<String> response = hubSpotService.getSubscriptions(apikey);
 
             if (response.getStatus() != HttpStatus.OK.value()) {
+                logger.error("Erro ao obter as assinaturas do webhook: " + response.getBody());
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
                         .body(new InternalServerErrorDTO(
@@ -72,6 +76,8 @@ public class HubSpotEventSubscriptionController implements HubSpotEventSubscript
                     .orElse(null);
 
             if (Objects.isNull(webhookEvent)) {
+                logger.error("Evento de webhook não encontrado.");
+                logger.error("Eventos disponíveis: " + webhookEventResponse.getResults());
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
                         .body(new InternalServerErrorDTO(
@@ -83,6 +89,8 @@ public class HubSpotEventSubscriptionController implements HubSpotEventSubscript
             if (Objects.isNull(eventSubscriptionProcessDTO)) {
                 boolean isActive = webhookEvent.isActive();
                 eventSubscriptionProcessDTO = new EventSubscriptionProcessDTO(!isActive);
+
+                logger.info("DTO vazio: Criando novo evento de webhook com status: " + eventSubscriptionProcessDTO.isActive());
             }
 
             String jsonBody = serializationUtils.objectToJson(eventSubscriptionProcessDTO);
@@ -90,6 +98,7 @@ public class HubSpotEventSubscriptionController implements HubSpotEventSubscript
             HttpResponse<String> responsePatch = hubSpotService.patchUpdateSubscriptions(webhookEvent.getId(), apikey, jsonBody);
 
             if (responsePatch.getStatus() != HttpStatus.OK.value()) {
+                logger.error("Erro ao atualizar a assinatura do webhook: " + responsePatch.getBody());
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
                         .body(new InternalServerErrorDTO(
@@ -101,10 +110,13 @@ public class HubSpotEventSubscriptionController implements HubSpotEventSubscript
             WebhookEventDTO webhookEventDTO = serializationUtils.jsonToObject(responsePatch.getBody(), WebhookEventDTO.class);
             webhookEventDTO.setUpdatedAt(ZonedDateTime.parse(DateAndHourUtils.getDateAndHourNow()));
 
+            logger.info("Assinatura do webhook atualizada com sucesso");
+
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(webhookEventDTO);
         } catch (SerializationUtilsException e) {
+            logger.error("Erro de serialização: " + e.getMessage(), e);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new InternalServerErrorDTO(
@@ -112,6 +124,7 @@ public class HubSpotEventSubscriptionController implements HubSpotEventSubscript
                             StatusHubSpotApiEnum.ERRO_SERIALIZACAO.getStatus())
                     );
         } catch (Exception e) {
+            logger.error("Erro ao processar o webhook: " + e.getMessage(), e);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new InternalServerErrorDTO(e.getMessage()));
