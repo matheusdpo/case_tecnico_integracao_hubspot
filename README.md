@@ -138,7 +138,7 @@ Caso tenha modificado a porta, atualize a URL acima conforme necessário.
 
 ## Decisões Técnicas
 
-- Spring Framework para facilitar a criação de APIs RESTful
+- Spring Framework para facilitar a criação de APIs REST
 - Kong Unirest para chamadas HTTP ao HubSpot
 - Jackson para serialização e desserialização de JSON
 - Thymeleaf para renderização de templates HTML e exibição do code no navegador
