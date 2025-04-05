@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter;
 public class DateAndHourUtils {
 
     public static String getDateAndHourNow(String format) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-        return now.format(formatter);
+        return ZonedDateTime
+                .now(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ofPattern(format));
     }
 
     public static String getDateAndHourNow() {
