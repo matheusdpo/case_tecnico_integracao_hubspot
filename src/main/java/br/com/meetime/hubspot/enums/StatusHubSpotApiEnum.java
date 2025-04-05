@@ -9,7 +9,11 @@ public enum StatusHubSpotApiEnum {
     CODE_OBRIGATORIO(5, "Parametro code obrigatorio"),
     ACCOUNTID_OBRIGATORIO(6, "Parametro accountId obrigatorio"),
     ACCOUNT_INFO_NULL(7, "Parametros de conta (nome, sobrenome, email, telefone e empresa) sao obrigatorios"),
-    BEARER_INFO_NULL(8, "Parametro Authorization obrigatorio");
+    BEARER_INFO_NULL(8, "Parametro Authorization obrigatorio"),
+    APIKEY_NULL(9, "Parametro apikey obrigatorio"),
+    APIKEY_INVALID(10, "apikey invalida, favor verificar se os parametros estao corretos ou consultar administrador de sistemas"),
+    EVENT_NOT_FOUND(11, "Evento nao encontrado"),
+    PARAMETER_INVALID(12, "Parametro invalido, favor verificar se os parametros estao corretos ou consultar administrador de sistemas");
 
 
     private final int statusCode;
