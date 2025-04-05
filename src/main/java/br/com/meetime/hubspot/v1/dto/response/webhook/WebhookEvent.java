@@ -65,4 +65,16 @@ public class WebhookEvent {
     public void setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "WebhookEvent{" +
+                "eventType='" + eventType + '\'' +
+                ", propertyName='" + propertyName + '\'' +
+                ", active=" + active +
+                ", id='" + id + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
