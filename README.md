@@ -151,11 +151,14 @@ Caso tenha modificado a porta, atualize a URL acima conforme necessário.
 
 ## Melhorias Futuras
 
-- **Testes unitários e de integração**
 - **Redis integrado com Bucket4j para garantiria controle centralizado e limitação efetiva entre múltiplas instâncias.**
 - **Novos endpoints para manipulação de contatos, como atualizacao, exclusao e consulta**
 - **Criacao de usuarios e permissões para acesso aos endpoints**
 - **Integração com outras entidades do HubSpot (ex: Companies, Deals)**
+- **Implementacao de interfaces para servicos do hubpot a fim de facilitar a troca de implementacoes**
+- **Uso de banco de dados como PostGres ou MongoDB para persistir os contatos criados, permitindo consultas e manipulações mais complexas.**
+- **Criacao de Dockerfile para facilitar o deploy em ambientes de produção.**
+- **Implementacao de testes automatizados para garantir a qualidade do código e a funcionalidade da API.**
 
 ---
 
