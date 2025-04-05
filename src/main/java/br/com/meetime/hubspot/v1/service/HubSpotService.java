@@ -1,4 +1,4 @@
-package br.com.meetime.hubspot.service;
+package br.com.meetime.hubspot.v1.service;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;

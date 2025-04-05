@@ -1,4 +1,4 @@
-package br.com.meetime.hubspot.dto.response;
+package br.com.meetime.hubspot.v1.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

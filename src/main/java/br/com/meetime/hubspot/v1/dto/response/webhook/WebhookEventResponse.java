@@ -1,4 +1,4 @@
-package br.com.meetime.hubspot.dto.response.webhook;
+package br.com.meetime.hubspot.v1.dto.response.webhook;
 
 import java.util.List;
 

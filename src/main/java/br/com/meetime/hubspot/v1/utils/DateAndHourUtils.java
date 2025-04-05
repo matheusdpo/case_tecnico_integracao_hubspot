@@ -1,4 +1,4 @@
-package br.com.meetime.hubspot.utils;
+package br.com.meetime.hubspot.v1.utils;
 
 import org.springframework.stereotype.Component;
 

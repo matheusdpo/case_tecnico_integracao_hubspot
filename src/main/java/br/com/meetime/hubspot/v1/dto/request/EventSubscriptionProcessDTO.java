@@ -1,4 +1,4 @@
-package br.com.meetime.hubspot.dto.request;
+package br.com.meetime.hubspot.v1.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

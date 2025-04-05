@@ -1,4 +1,4 @@
-package br.com.meetime.hubspot.controller.thymeleaf;
+package br.com.meetime.hubspot.v1.controller.thymeleaf;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

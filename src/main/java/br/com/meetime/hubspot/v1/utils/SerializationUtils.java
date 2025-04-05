@@ -1,7 +1,6 @@
-package br.com.meetime.hubspot.utils;
+package br.com.meetime.hubspot.v1.utils;
 
-import br.com.meetime.hubspot.dto.request.AccountHubSpotDTO;
-import br.com.meetime.hubspot.exceptions.SerializationUtilsException;
+import br.com.meetime.hubspot.v1.exceptions.SerializationUtilsException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

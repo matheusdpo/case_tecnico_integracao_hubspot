@@ -1,4 +1,4 @@
-package br.com.meetime.hubspot.enums;
+package br.com.meetime.hubspot.v1.enums;
 
 public enum EventTypeSubscriptionEnum {
 
