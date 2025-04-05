@@ -11,6 +11,7 @@
 - [Tecnologias e Bibliotecas](#tecnologias-e-bibliotecas)
 - [Como Executar o Projeto](#como-executar-o-projeto)
 - [Endpoints Disponíveis](#endpoints-disponíveis)
+- [Documentação da API - Swagger UI](#documentação-da-api---swagger-ui)
 - [Decisões Técnicas](#decisões-técnicas)
 - [Melhorias Futuras](#melhorias-futuras)
 
@@ -107,6 +108,24 @@ mvn spring-boot:run
 
 ---
 
+# Documentação da API - Swagger UI
+
+Esta aplicação possui integração com o **Swagger UI**, permitindo a visualização e testes interativos dos endpoints da API.
+
+---
+
+## URL da documentação:
+
+ [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+---
+
+Para acessar o Swagger, certifique-se de que a aplicação esteja rodando localmente na porta `8080`.
+
+Caso tenha modificado a porta, atualize a URL acima conforme necessário.
+
+
+
 ## Decisões Técnicas
 
 - Spring Framework para facilitar a criação de APIs RESTful
@@ -134,3 +153,4 @@ mvn spring-boot:run
 Feito por **Matheus de Paulo Oliveira**  
 💼 Software Engineer | Java | Spring Framework | APIs RESTful | RabbitMQ | AWS | RPA | Linux   
 📫 matheusoliveira1991@hotmail.com
+
