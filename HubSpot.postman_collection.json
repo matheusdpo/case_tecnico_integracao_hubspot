@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "0eaae92a-744f-4009-8d73-16e2eee1d840",
+		"name": "HubSpot",
+		"description": "HubSpot é uma plataforma de software que ajuda empresas a gerir marketing, vendas e atendimento ao cliente. A ferramenta é baseada em CRM (Customer Relationship Management) e usa inteligência artificial (IA).\n\nSource: [https://br.hubspot.com/](https://br.hubspot.com/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13877379",
+		"_collection_link": "https://workspacee.postman.co/workspace/My-Workspace~bc74ad96-c577-4d6e-8cb2-2b7b0080f5c1/collection/13877379-0eaae92a-744f-4009-8d73-16e2eee1d840?action=share&source=collection_link&creator=13877379"
+	},
+	"item": [
+		{
+			"name": "API Integracao",
+			"item": [
+				{
+					"name": "authorize-url",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/hubspot/auth-url?clientId=your-client-id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"hubspot",
+								"auth-url"
+							],
+							"query": [
+								{
+									"key": "clientId",
+									"value": "your-client-id"
+								}
+							]
+						},
+						"description": "Retorna URL de autenticacao"
+					},
+					"response": []
+				},
+				{
+					"name": "token-access",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/hubspot/token-access?code=your-code&clientId=your-client-id&clientSecret=your-client-secret",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"hubspot",
+								"token-access"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "your-code"
+								},
+								{
+									"key": "clientId",
+									"value": "your-client-id"
+								},
+								{
+									"key": "clientSecret",
+									"value": "your-client-secret"
+								}
+							]
+						},
+						"description": "Retorna token Bearer para utilizacao da API"
+					},
+					"response": []
+				},
+				{
+					"name": "create-account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Bearer token"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstname\": \"name\",\n    \"lastname\": \"lastName\",\n    \"email\": \"mail@mail.com\",\n    \"phone\": \"+5511999999999\",\n    \"company\": \"HubSpot\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/hubspot/create-account",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"hubspot",
+								"create-account"
+							]
+						},
+						"description": "Cria novo contato no CRM atraves das informacoes fornecidas no Json Body"
+					},
+					"response": []
+				},
+				{
+					"name": "process-webhook",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/hubspot/process-webhook?apikey=your-api-key",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"hubspot",
+								"process-webhook"
+							],
+							"query": [
+								{
+									"key": "apikey",
+									"value": "your-api-key"
+								}
+							]
+						},
+						"description": "Realiza operacoes no webhook contacts.creation"
+					},
+					"response": []
+				}
+			],
+			"description": "Projeto de backend Java para integração com a API do HubSpot utilizando OAuth 2.0 (Authorization Code Flow), com endpoints para autenticação, criação de contatos e recebimento de webhooks."
+		}
+	]
+}
