@@ -1,15 +1,22 @@
-package br.com.meetime.hubspot.controller.hubspot;
+package br.com.meetime.hubspot.v1.controller.hubspot;
 
-import br.com.meetime.hubspot.dto.request.EventSubscriptionProcessDTO;
-import br.com.meetime.hubspot.dto.response.InternalServerErrorDTO;
-import br.com.meetime.hubspot.dto.response.webhook.WebhookEvent;
-import br.com.meetime.hubspot.dto.response.webhook.WebhookEventResponse;
-import br.com.meetime.hubspot.enums.EventTypeSubscriptionEnum;
-import br.com.meetime.hubspot.enums.StatusHubSpotApiEnum;
-import br.com.meetime.hubspot.exceptions.SerializationUtilsException;
-import br.com.meetime.hubspot.service.HubSpotService;
-import br.com.meetime.hubspot.utils.DateAndHourUtils;
-import br.com.meetime.hubspot.utils.SerializationUtils;
+import br.com.meetime.hubspot.v1.controller.hubspot.swagger.HubSpotEventSubscriptionControllerSwagger;
+import br.com.meetime.hubspot.v1.dto.request.EventSubscriptionProcessDTO;
+import br.com.meetime.hubspot.v1.dto.response.InternalServerErrorDTO;
+import br.com.meetime.hubspot.v1.dto.response.WebhookEventDTO;
+import br.com.meetime.hubspot.v1.dto.response.webhook.WebhookEvent;
+import br.com.meetime.hubspot.v1.dto.response.webhook.WebhookEventResponse;
+import br.com.meetime.hubspot.v1.enums.EventTypeSubscriptionEnum;
+import br.com.meetime.hubspot.v1.enums.StatusHubSpotApiEnum;
+import br.com.meetime.hubspot.v1.exceptions.SerializationUtilsException;
+import br.com.meetime.hubspot.v1.service.HubSpotService;
+import br.com.meetime.hubspot.v1.utils.DateAndHourUtils;
+import br.com.meetime.hubspot.v1.utils.SerializationUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kong.unirest.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +27,9 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/hubspot")
-public class HubSpotEventSubscriptionController {
+@RequestMapping("/api/v1/hubspot")
+@Tag(name = "HubSpot Event Webhook Subscriptions API", description = "API for managing Event Webhook subscriptions")
+public class HubSpotEventSubscriptionController implements HubSpotEventSubscriptionControllerSwagger {
 
     @Autowired
     private HubSpotService hubSpotService;
@@ -30,6 +38,7 @@ public class HubSpotEventSubscriptionController {
     private SerializationUtils serializationUtils;
 
     @PostMapping("/process-webhook")
+    @Override
     public ResponseEntity<?> getTokenAccess(@RequestParam(required = false) String apikey,
                                             @RequestBody(required = false) EventSubscriptionProcessDTO eventSubscriptionProcessDTO) {
 
@@ -89,11 +98,12 @@ public class HubSpotEventSubscriptionController {
                         );
             }
 
-            WebhookEvent webhookEventResponsePatch = serializationUtils.jsonToObject(responsePatch.getBody(), WebhookEvent.class);
-            webhookEventResponsePatch.setUpdatedAt(ZonedDateTime.parse(DateAndHourUtils.getDateAndHourNow()));
+            WebhookEventDTO webhookEventDTO = serializationUtils.jsonToObject(responsePatch.getBody(), WebhookEventDTO.class);
+            webhookEventDTO.setUpdatedAt(ZonedDateTime.parse(DateAndHourUtils.getDateAndHourNow()));
+
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(webhookEventResponsePatch);
+                    .body(webhookEventDTO);
         } catch (SerializationUtilsException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

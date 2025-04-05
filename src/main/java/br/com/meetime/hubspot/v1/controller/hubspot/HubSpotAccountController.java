@@ -1,10 +1,12 @@
-package br.com.meetime.hubspot.controller.hubspot;
+package br.com.meetime.hubspot.v1.controller.hubspot;
 
-import br.com.meetime.hubspot.dto.request.AccountHubSpotDTO;
-import br.com.meetime.hubspot.dto.response.InternalServerErrorDTO;
-import br.com.meetime.hubspot.enums.StatusHubSpotApiEnum;
-import br.com.meetime.hubspot.service.HubSpotService;
-import br.com.meetime.hubspot.utils.SerializationUtils;
+import br.com.meetime.hubspot.v1.controller.hubspot.swagger.HubSpotAccountControllerSwagger;
+import br.com.meetime.hubspot.v1.dto.request.AccountHubSpotDTO;
+import br.com.meetime.hubspot.v1.dto.response.InternalServerErrorDTO;
+import br.com.meetime.hubspot.v1.enums.StatusHubSpotApiEnum;
+import br.com.meetime.hubspot.v1.service.HubSpotService;
+import br.com.meetime.hubspot.v1.utils.SerializationUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kong.unirest.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/hubspot")
-public class HubSpotAccountController {
+@RequestMapping("/api/v1/hubspot")
+@Tag(name = "HubSpot Account API", description = "API for managing HubSpot accounts")
+public class HubSpotAccountController implements HubSpotAccountControllerSwagger {
 
     @Autowired
     private SerializationUtils serializationUtils;
@@ -23,8 +26,8 @@ public class HubSpotAccountController {
     @Autowired
     private HubSpotService hubSpotService;
 
-    //todo rate limit
     @PostMapping("/create-account")
+    @Override
     public ResponseEntity<?> createAccount(@RequestBody(required = false) AccountHubSpotDTO accountHubSpotDTO,
                                            @RequestHeader(name = "authorization", required = false) String token) {
         try {

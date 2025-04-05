@@ -1,9 +1,11 @@
-package br.com.meetime.hubspot.controller.hubspot;
+package br.com.meetime.hubspot.v1.controller.hubspot;
 
-import br.com.meetime.hubspot.dto.response.AuthorizationUrlDTO;
-import br.com.meetime.hubspot.dto.response.InternalServerErrorDTO;
-import br.com.meetime.hubspot.enums.StatusHubSpotApiEnum;
-import br.com.meetime.hubspot.service.HubSpotService;
+import br.com.meetime.hubspot.v1.controller.hubspot.swagger.HubSpotAuthControllerSwagger;
+import br.com.meetime.hubspot.v1.dto.response.AuthorizationUrlDTO;
+import br.com.meetime.hubspot.v1.dto.response.InternalServerErrorDTO;
+import br.com.meetime.hubspot.v1.enums.StatusHubSpotApiEnum;
+import br.com.meetime.hubspot.v1.service.HubSpotService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/hubspot")
-public class HubSpotAuthController {
+@RequestMapping("/api/v1/hubspot")
+@Tag(name = "HubSpot Auth API", description = "API for managing authentication")
+public class HubSpotAuthController implements HubSpotAuthControllerSwagger {
 
     @Autowired
     private HubSpotService hubSpotService;
 
     @GetMapping("/auth-url")
+    @Override
     public ResponseEntity<?> getAuthorizationUrl(@RequestParam(required = false) String clientId) {
         try {
 

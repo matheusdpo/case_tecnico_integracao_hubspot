@@ -1,11 +1,13 @@
-package br.com.meetime.hubspot.controller.hubspot;
+package br.com.meetime.hubspot.v1.controller.hubspot;
 
-import br.com.meetime.hubspot.dto.response.AccessTokenDTO;
-import br.com.meetime.hubspot.dto.response.InternalServerErrorDTO;
-import br.com.meetime.hubspot.enums.StatusHubSpotApiEnum;
-import br.com.meetime.hubspot.exceptions.SerializationUtilsException;
-import br.com.meetime.hubspot.service.HubSpotService;
-import br.com.meetime.hubspot.utils.SerializationUtils;
+import br.com.meetime.hubspot.v1.controller.hubspot.swagger.HubSpotTokenControllerSwagger;
+import br.com.meetime.hubspot.v1.dto.response.AccessTokenDTO;
+import br.com.meetime.hubspot.v1.dto.response.InternalServerErrorDTO;
+import br.com.meetime.hubspot.v1.enums.StatusHubSpotApiEnum;
+import br.com.meetime.hubspot.v1.exceptions.SerializationUtilsException;
+import br.com.meetime.hubspot.v1.service.HubSpotService;
+import br.com.meetime.hubspot.v1.utils.SerializationUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kong.unirest.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/hubspot")
-public class HubSpotTokenController {
+@RequestMapping("/api/v1/hubspot")
+@Tag(name = "HubSpot Token API", description = "API get auth bearer token")
+public class HubSpotTokenController implements HubSpotTokenControllerSwagger {
 
     @Autowired
     private HubSpotService hubSpotService;
@@ -28,6 +31,7 @@ public class HubSpotTokenController {
     private SerializationUtils serializationUtils;
 
     @GetMapping("/token-access")
+    @Override
     public ResponseEntity<?> getTokenAccess(@RequestParam(required = false) String clientId,
                                             @RequestParam(required = false) String clientSecret,
                                             @RequestParam(required = false) String code) {
