@@ -12,6 +12,7 @@
 - [Como Executar o Projeto](#como-executar-o-projeto)
 - [Endpoints Disponíveis](#endpoints-disponíveis)
 - [Documentação da API - Swagger UI](#documentação-da-api---swagger-ui)
+- [Postman Collection](#postman-collection)
 - [Decisões Técnicas](#decisões-técnicas)
 - [Melhorias Futuras](#melhorias-futuras)
 
@@ -43,6 +44,7 @@ com o CRM do HubSpot, utilizando OAuth 2.0 para autenticação e consumo de endp
 | Thymeleaf    | Renderização de templates HTML           |
 | Swagger      | Documentação da API                      |
 | SLF4J        | Armazenamento de logs (logs/hubspot.log) |
+| Bucket4j  | Limitação de requisições                 |
 
 ---
 
@@ -57,8 +59,8 @@ com o CRM do HubSpot, utilizando OAuth 2.0 para autenticação e consumo de endp
 ### Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/matheusdpo/case_tecnico_integracao_hubspot.git
+cd case_tecnico_integracao_hubspot
 ```
 
 ### Configure as variáveis no `application.properties`
@@ -123,7 +125,16 @@ Para acessar o Swagger, certifique-se de que a aplicação esteja rodando localm
 
 Caso tenha modificado a porta, atualize a URL acima conforme necessário.
 
+---
 
+## Postman Collection
+
+1. Baixe o arquivo da collection: [PostmanCollection.json](./HubSpot.postman_collection.json)
+2. Abra o Postman
+3. Vá em "Import" e selecione o arquivo baixado
+4. Pronto! Agora você pode testar todos os endpoints
+
+---
 
 ## Decisões Técnicas
 
@@ -134,14 +145,15 @@ Caso tenha modificado a porta, atualize a URL acima conforme necessário.
 - OpenAPI/Swagger para documentação da API
 - Adicionado /v1/ no path para versionamento da API
 - Logs (SLF4J) nativo do Spring evitar dependências extras para monitoramento e depuração
+- Bucket4j para limitar o número de requisições, por nao necessitar uso de infra extra (Docker e Redis) – perfeito para rate limiting simples em aplicações Java.
 
 ---
 
 ## Melhorias Futuras
 
 - **Testes unitários e de integração**
-- **Redis para armazenamento de tokens**
-- **Novos endpoints para manipulação de contatos, como atualização, exclusão e consulta**
+- **Redis integrado com Bucket4j para garantiria controle centralizado e limitação efetiva entre múltiplas instâncias.**
+- **Novos endpoints para manipulação de contatos, como atualizacao, exclusao e consulta**
 - **Criacao de usuarios e permissões para acesso aos endpoints**
 - **Integração com outras entidades do HubSpot (ex: Companies, Deals)**
 
